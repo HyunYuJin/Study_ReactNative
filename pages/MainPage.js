@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'rea
 import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
+import { StatusBar } from 'expo-status-bar'; // expo에서 제공해주는 상태바 스타일
 
 
 export default function MainPage() {
@@ -42,6 +43,8 @@ export default function MainPage() {
   // useEffect로 인해 데이터가 준비되고, ready 값이 변경되면 : 콜론 뒤의 값이 반환된다.
   return ready ? <Loading/> : (
     <ScrollView style={styles.container}>
+      <StatusBar style="dark" />
+
       <Text style={styles.title}>나만의 꿀팁</Text>
 			<Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
       <Image style={styles.mainImage} source={main}/>
