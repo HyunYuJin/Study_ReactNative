@@ -5,7 +5,8 @@ import AboutImage from '../assets/aboutImage.png';
 export default function AboutPage() {
     return (
         <View style={styles.container}>
-            <Text style={styles.intro}>HELLO! THIS IS HYEON YU JIN, WELCOME TO THE PET TIP PAGE!</Text>
+            <Text style={styles.intro}>HELLO! THIS IS YU JIN, WELCOME TO THE PET TIP PAGE!</Text>
+
             <View style={styles.innerContainer}>
                 <Image style={styles.aboutImage} source={AboutImage} />
                 <Text style={styles.innerTitle}>Do you have any questions while raising a pet dog?</Text>
@@ -20,53 +21,52 @@ export default function AboutPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1835D0',
-        paddingTop: 50
+        backgroundColor: '#1F266A',
+        alignItems: "center"
     },
     intro: {
         color: "#FFF",
         fontSize: 30,
         fontWeight: "700",
-        textAlign: "center",
-        marginBottom: 50
+        paddingLeft: 30,
+        paddingTop: 100,
+        paddingRight: 30
     },
     innerContainer: {
-        width: "90%",
-        height: "70%",
+        width: 300,
+        height: 500,
         backgroundColor: "#FFF",
-        alignSelf: "center",
-        borderRadius: 20,
+        marginTop: 50,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center"
     },
     aboutImage: {
         width: 150,
         height: 150,
-        alignSelf: "center",
-        borderRadius: 20,
-        marginTop: 100
+        borderRadius: 30
     },
     innerTitle: {
-        fontSize: 30,
-        fontWeight: "700",
         textAlign: "center",
-        margin: 10
+        fontSize: 20,
+        fontWeight: "700",
+        paddingLeft: 22,
+        paddingRight: 22
     },
     innerContent: {
-        fontSize: 20,
-        fontWeight: "500",
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 15,
+        fontWeight: "700",
+        padding: 22
     },
     Button: {
-        width: 150,
-        backgroundColor: "#fdc453",
+        backgroundColor: "orange",
         padding: 20,
-        marginTop: 30,
-        borderRadius: 10,
-        alignSelf: "center"
+        borderRadius: 15
     },
     ButtonText: {
         color: "#FFF",
-        fontSize: 16,
-        fontWeight: "700",
-        textAlign: "center",
+        fontSize: 15,
+        fontWeight: "700"
     }
 })

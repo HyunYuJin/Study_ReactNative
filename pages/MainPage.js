@@ -1,22 +1,39 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import main from '../assets/main.png';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import data from '../data.json';
+import Card from '../components/Card';
+import Loading from '../components/Loading';
 
-// 파일 이름과 함수명은 동일해야한다.
+
 export default function MainPage() {
   console.disableYellowBox = true;
+  
+  const [state, setState] = useState([]);
+  const [ready, setReady] = useState(true)
 
-  let tip = data.tip;
-  let todayWeather = 10 + 17;
+  useEffect(()=>{
+		// 1초 뒤에 실행
+    setTimeout(()=>{
+      setState(data)
+      setReady(false)
+    },1000)
+    // 상태 값이 바뀌었지!! 그럼 화면이 다시 로딩된다!
+  },[])
+
+  // let tip = data.tip;
+  let tip = state.tip;
+	let todayWeather = 10 + 17;
   let todayCondition = "흐림"
 
-  return (
+	// 처음 ready 상태값은 true 이므로 ? 물음표 바로 뒤에 값이 반환된다.
+  // useEffect로 인해 데이터가 준비되고, ready 값이 변경되면 : 콜론 뒤의 값이 반환된다.
+  return ready ? <Loading/> : (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>나만의 꿀팁</Text>
-      <Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
+			<Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
       <Image style={styles.mainImage} source={main}/>
-      <ScrollView style={styles.middleContainer} horizontal indicatorStyle={ "white" }>
+      <ScrollView style={styles.middleContainer} horizontal indicatorStyle={"white"}>
         <TouchableOpacity style={styles.middleButton01}><Text style={styles.middleButtonText}>생활</Text></TouchableOpacity>
         <TouchableOpacity style={styles.middleButton02}><Text style={styles.middleButtonText}>재테크</Text></TouchableOpacity>
         <TouchableOpacity style={styles.middleButton03}><Text style={styles.middleButtonText}>반려견</Text></TouchableOpacity>
@@ -24,29 +41,11 @@ export default function MainPage() {
       </ScrollView>
       <View style={styles.cardContainer}>
          {/* 하나의 카드 영역을 나타내는 View */}
-         { 
-          tip.map((content, i)=>{
-            return i % 2 == 0 ? (
-              <View style={styles.card} key={i}>
-                <Image style={styles.cardImage} source={{uri: content.image}}/>
-                <View style={styles.cardText}>
-                  <Text style={styles.cardTitle} numberOfLines={1}>{content.title}</Text>
-                  <Text style={styles.cardDesc} numberOfLines={3}>{content.desc}</Text>
-                  <Text style={styles.cardDate}>{content.date}</Text>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.cardOdd} key={i}>
-                <Image style={styles.cardImage} source={{uri: content.image}}/>
-                <View style={styles.cardText}>
-                  <Text style={styles.cardTitle} numberOfLines={1}>{content.title}</Text>
-                  <Text style={styles.cardDesc} numberOfLines={3}>{content.desc}</Text>
-                  <Text style={styles.cardDate}>{content.date}</Text>
-                </View>
-              </View>
-            )
+         {
+          tip.map((content,i)=>{
+            return (<Card content={content} key={i}/>)
           })
-         }
+        }
       </View>
     </ScrollView>
   );
@@ -54,123 +53,71 @@ export default function MainPage() {
 
 const styles = StyleSheet.create({
   container: {
-    //앱의 배경 색
     backgroundColor: '#fff',
   },
   title: {
-    //폰트 사이즈
     fontSize: 20,
-    //폰트 두께
     fontWeight: '700',
-    //위 공간으로 부터 이격
-    marginTop:50,
-    //왼쪽 공간으로 부터 이격
-    marginLeft:20
+    marginTop: 50,
+    marginLeft: 20
   },
   weather:{
-    alignSelf:"flex-end",
-    paddingRight:20
+    alignSelf: "flex-end",
+    paddingRight: 20
   },
   mainImage: {
-    //컨텐츠의 넓이 값
-    width:'90%',
-    //컨텐츠의 높이 값
-    height:200,
-    //컨텐츠의 모서리 구부리기
-    borderRadius:10,
-    marginTop:20,
-    //컨텐츠 자체가 앱에서 어떤 곳에 위치시킬지 결정(정렬기능)
-    //각 속성의 값들은 공식문서에 고대로~ 나와 있음
-    alignSelf:"center"
+    width: '90%',
+    height: 200,
+    borderRadius: 10,
+    marginTop: 20,
+    alignSelf: "center"
   },
-  middleContainer:{
-    marginTop:20,
-    marginLeft:10,
-    height:60
+  middleContainer: {
+    marginTop: 20,
+    marginLeft: 10,
+    height: 60
   },
   middleButton01: {
-    width:100,
-    height:50,
+    width: 100,
+    height: 50,
     padding:15,
-    backgroundColor:"#fdc453",
-    borderColor:"deeppink",
-    borderRadius:15,
-    margin:7
+    backgroundColor: "#fdc453",
+    borderColor: "deeppink",
+    borderRadius: 15,
+    margin: 7
   },
   middleButton02: {
-    width:100,
-    height:50,
-    padding:15,
-    backgroundColor:"#fe8d6f",
-    borderRadius:15,
-    margin:7
+    width: 100,
+    height: 50,
+    padding: 15,
+    backgroundColor: "#fe8d6f",
+    borderRadius: 15,
+    margin: 7
   },
   middleButton03: {
-    width:100,
-    height:50,
-    padding:15,
-    backgroundColor:"#9adbc5",
-    borderRadius:15,
-    margin:7
+    width: 100,
+    height: 50,
+    padding: 15,
+    backgroundColor: "#9adbc5",
+    borderRadius: 15,
+    margin: 7
   },
   middleButtonText: {
-    color:"#fff",
-    fontWeight:"700",
-    //텍스트의 현재 위치에서의 정렬 
-    textAlign:"center"
+    color: "#fff",
+    fontWeight: "700",
+    // 텍스트의 현재 위치에서의 정렬 
+    textAlign: "center"
   },
   middleButton04: {
-    width:100,
-    height:50,
-    padding:15,
-    backgroundColor:"#f886a8",
-    borderRadius:15,
-    margin:7
+    width: 100,
+    height: 50,
+    padding: 15,
+    backgroundColor: "#f886a8",
+    borderRadius: 15,
+    margin: 7
   },
   cardContainer: {
-    marginTop:10,
-    marginLeft:10
-  },
-  card:{
-    flex:1,
-    //컨텐츠들을 가로로 나열
-    //세로로 나열은 column <- 디폴트 값임 
-    flexDirection:"row",
-    margin:10,
-    borderBottomWidth:0.5,
-    borderBottomColor:"#eee",
-    paddingBottom:10
-  },
-  cardOdd: {
-    flex:1,
-    flexDirection:"row",
-    margin:10,
-    backgroundColor:"#FFFED7",
-    borderRadius:20,
-    borderBottomWidth:0.5,
-    borderBottomColor:"#eee",
-    paddingBottom:10
-  },
-  cardImage: {
-    flex:1,
-    width:100,
-    height:100,
-    borderRadius:10,
-  },
-  cardText: {
-    flex:2,
-    flexDirection:"column",
-    marginLeft:10,
-  },
-  cardTitle: {
-    fontSize:20,
-    fontWeight:"700"
-  },
-  cardDesc: {
-    fontSize:15
-  },
-  cardDate: {
-    fontSize:10,
-    color:"#A6A6A6",
+    marginTop: 10,
+    marginLeft: 10
   }
 });
