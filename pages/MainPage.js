@@ -1,6 +1,6 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import main from '../assets/main.png';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
@@ -9,20 +9,32 @@ import Loading from '../components/Loading';
 export default function MainPage() {
   console.disableYellowBox = true;
   
-  const [state, setState] = useState([]);
-  const [ready, setReady] = useState(true)
+  const [state, setState] = useState([]); // 기존 꿀팁을 저장하고 있을 상태
+  const [ready, setReady] = useState(true); // 준비 중
+  const [cateState, setCateState] = useState([]); // 카테고리에 따른 각각의 꿀팁을 그때그때 저장관리할 상태
 
   useEffect(()=>{
 		// 1초 뒤에 실행
     setTimeout(()=>{
-      setState(data)
-      setReady(false)
-    },1000)
+      let tip = data.tip; // 꿀팁 데이터로 모두 초기화 준비
+      setState(tip);
+      setCateState(tip);
+      setReady(false);
+    }, 1000)
     // 상태 값이 바뀌었지!! 그럼 화면이 다시 로딩된다!
-  },[])
+  },[]);
 
-  // let tip = data.tip;
-  let tip = state.tip;
+  const category = (cate) => {
+    if (cate == "전체보기"){
+      //전체보기면 원래 꿀팁 데이터를 담고 있는 상태값으로 다시 초기화
+      setCateState(state);
+    } else{
+      setCateState(state.filter((d) => {
+          return d.category == cate;
+      }));
+    }
+  }
+
 	let todayWeather = 10 + 17;
   let todayCondition = "흐림"
 
@@ -34,15 +46,16 @@ export default function MainPage() {
 			<Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
       <Image style={styles.mainImage} source={main}/>
       <ScrollView style={styles.middleContainer} horizontal indicatorStyle={"white"}>
-        <TouchableOpacity style={styles.middleButton01}><Text style={styles.middleButtonText}>생활</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.middleButton02}><Text style={styles.middleButtonText}>재테크</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.middleButton03}><Text style={styles.middleButtonText}>반려견</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.middleButton04}><Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButtonAll} onPress={()=>{category('전체보기')}}><Text style={styles.middleButtonTextAll}>전체보기</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButton01} onPress={()=>{category('생활')}}><Text style={styles.middleButtonText}>생활</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButton02} onPress={()=>{category('재테크')}}><Text style={styles.middleButtonText}>재테크</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButton03} onPress={()=>{category('반려견')}}><Text style={styles.middleButtonText}>반려견</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButton04} onPress={()=>{category('꿀팁 찜')}}><Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
       </ScrollView>
       <View style={styles.cardContainer}>
          {/* 하나의 카드 영역을 나타내는 View */}
          {
-          tip.map((content,i)=>{
+          cateState.map((content,i)=>{
             return (<Card content={content} key={i}/>)
           })
         }
@@ -76,6 +89,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     height: 60
+  },
+  middleButtonAll: {
+    width:100,
+    height:50,
+    padding:15,
+    backgroundColor:"#20b2aa",
+    borderColor:"deeppink",
+    borderRadius:15,
+    margin:7
   },
   middleButton01: {
     width: 100,
@@ -116,8 +138,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin: 7
   },
+  middleButtonTextAll: {
+    color:"#fff",
+    fontWeight:"700",
+    textAlign:"center"
+  },
   cardContainer: {
     marginTop: 10,
     marginLeft: 10
   }
 });
+
