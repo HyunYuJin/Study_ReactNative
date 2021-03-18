@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView,TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView,TouchableOpacity, Alert, Share } from 'react-native';
 import { useState, useEffect } from 'react';
+import * as Linking from 'expo-linking'; // 외부 링크 기능을 위해 불러온다.
 
 export default function DetailPage({ navigation, route }) {
     console.disableYellowBox = true;
@@ -39,15 +40,34 @@ export default function DetailPage({ navigation, route }) {
         Alert.alert("팝업!!");
     }
 
+    const share = () => {
+        Share.share({
+            message: `${tip.title} ${tip.desc} ${tip.image}`,
+        });
+    }
+
+    const link = () => {
+        Linking.openURL('https://github.com/HyunYuJin');
+    }
+
     return (
         <ScrollView style={styles.container}>
             <Image style={styles.image} source={{uri:tip.image}}/>
             <View style={styles.textContainer}>
                 <Text style={styles.title}>{tip.title}</Text>
                 <Text style={styles.desc}>{tip.desc}</Text>
-                <TouchableOpacity style={styles.button} onPress={()=>popup()}>
-                    <Text style={styles.buttonText}>팁 찜하기</Text>
-                </TouchableOpacity>
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={() => popup()}>
+                        <Text style={styles.buttonText}>팁 찜하기</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => share()}>
+                        <Text style={styles.buttonText}>팁 공유하기</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => link()}>
+                        <Text style={styles.buttonText}>외부 링크</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </ScrollView>
     )
@@ -80,6 +100,8 @@ const styles = StyleSheet.create({
     button: {
         width: 100,
         marginTop: 20,
+        marginRight: 10,
+        marginLeft: 10,
         padding: 10,
         borderWidth: 1,
         borderColor: 'deeppink',
@@ -88,5 +110,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center'
+    },
+    buttonContainer: {
+        flexDirection: "row"
     }
 });
