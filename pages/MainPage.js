@@ -50,21 +50,20 @@ export default function MainPage({ navigation, route }) {
       <StatusBar style="dark" />
 
 			<Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
+      <TouchableOpacity style={styles.aboutButton} onPress={() => navigation.navigate('AboutPage')}><Text style={styles.aboutButtonText}>소개 페이지</Text></TouchableOpacity>
       <Image style={styles.mainImage} source={main}/>
       <ScrollView style={styles.middleContainer} horizontal indicatorStyle={"white"}>
         <TouchableOpacity style={styles.middleButtonAll} onPress={()=>{category('전체보기')}}><Text style={styles.middleButtonTextAll}>전체보기</Text></TouchableOpacity>
         <TouchableOpacity style={styles.middleButton01} onPress={()=>{category('생활')}}><Text style={styles.middleButtonText}>생활</Text></TouchableOpacity>
         <TouchableOpacity style={styles.middleButton02} onPress={()=>{category('재테크')}}><Text style={styles.middleButtonText}>재테크</Text></TouchableOpacity>
         <TouchableOpacity style={styles.middleButton03} onPress={()=>{category('반려견')}}><Text style={styles.middleButtonText}>반려견</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.middleButton04} onPress={()=>{category('꿀팁 찜')}}><Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.middleButton04} onPress={()=>{category('꿀팁 찜')}} onPress={() => navigation.navigate('LikePage')}><Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
       </ScrollView>
       <View style={styles.cardContainer}>
          {/* 하나의 카드 영역을 나타내는 View */}
-         {
-          cateState.map((content,i)=>{
+         {cateState.map((content, i)=>{
             return (<Card content={content} key={i} navigation={navigation} />)
-          })
-        }
+          })}
       </View>
     </ScrollView>
   );
@@ -85,6 +84,20 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     marginTop: 20
   },
+  aboutButton: {
+    width: 100,
+    height: 40,
+    padding: 15, 
+    backgroundColor: "pink",
+    borderRadius: 10,
+    marginRight: 20,
+    marginTop: 10,
+    alignSelf: "flex-end"
+  },
+  aboutButtonText: {
+    color: '#fff',
+    textAlign: "center"
+  },
   mainImage: {
     width: '90%',
     height: 200,
@@ -98,13 +111,13 @@ const styles = StyleSheet.create({
     height: 60
   },
   middleButtonAll: {
-    width:100,
-    height:50,
-    padding:15,
-    backgroundColor:"#20b2aa",
-    borderColor:"deeppink",
-    borderRadius:15,
-    margin:7
+    width: 100,
+    height: 50,
+    padding: 15,
+    backgroundColor: "#20b2aa",
+    borderColor: "deeppink",
+    borderRadius: 15,
+    margin: 7
   },
   middleButton01: {
     width: 100,

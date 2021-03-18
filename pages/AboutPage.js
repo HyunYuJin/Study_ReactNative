@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import AboutImage from '../assets/aboutImage.png';
 
-export default function AboutPage() {
+export default function AboutPage({ navigation, route }) {
+    useEffect(() => {
+        navigation.setOptions({
+            title: '소개 페이지',
+            headerStyle: {
+                backgroundColor: "#1F266A",
+                borderBottomColor: "#1F266A",
+                shadowColor: "#1F266A",
+                height: 100
+            },
+            headerTintColor: "#FFFFFF"
+        })
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.intro}>HELLO! THIS IS YU JIN, WELCOME TO THE PET TIP PAGE!</Text>
