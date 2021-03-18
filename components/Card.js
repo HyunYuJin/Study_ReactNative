@@ -1,22 +1,21 @@
 import React from "react"
-import {View,Text,Image,StyleSheet} from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 //비구조 할당 방식으로 넘긴 속성 데이터를 꺼내 사용함
-export default function Card({ content }) {
+export default function Card({ content, navigation }) {
     return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DetailPage', content)}}>
             <Image style={styles.cardImage} source={{uri:content.image}}/>
             <View style={styles.cardText}>
             <Text style={styles.cardTitle} numberOfLines={1}>{content.title}</Text>
             <Text style={styles.cardDesc} numberOfLines={3}>{content.desc}</Text>
             <Text style={styles.cardDate}>{content.date}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-
   card:{
     flex:1,
     //컨텐츠들을 가로로 나열
@@ -50,4 +49,4 @@ const styles = StyleSheet.create({
     fontSize:10,
     color:"#A6A6A6",
   }
-})
+});

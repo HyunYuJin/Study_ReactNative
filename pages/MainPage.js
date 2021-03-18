@@ -7,7 +7,7 @@ import Loading from '../components/Loading';
 import { StatusBar } from 'expo-status-bar'; // expo에서 제공해주는 상태바 스타일
 
 
-export default function MainPage() {
+export default function MainPage({ navigation, route }) {
   console.disableYellowBox = true;
   
   const [state, setState] = useState([]); // 기존 꿀팁을 저장하고 있을 상태
@@ -17,6 +17,10 @@ export default function MainPage() {
   useEffect(()=>{
 		// 1초 뒤에 실행
     setTimeout(()=>{
+      navigation.setOptions({
+        title: '나만의 꿀팁'
+      });
+
       let tip = data.tip; // 꿀팁 데이터로 모두 초기화 준비
       setState(tip);
       setCateState(tip);
@@ -58,7 +62,7 @@ export default function MainPage() {
          {/* 하나의 카드 영역을 나타내는 View */}
          {
           cateState.map((content,i)=>{
-            return (<Card content={content} key={i}/>)
+            return (<Card content={content} key={i} navigation={navigation} />)
           })
         }
       </View>
