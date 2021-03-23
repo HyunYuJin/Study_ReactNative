@@ -5,14 +5,16 @@ import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
 import { StatusBar } from 'expo-status-bar'; // expo에서 제공해주는 상태바 스타일
-
+import * as Location from "expo-location"; // expo-location 내에 있는 도구를 모두 Location으로 지칭하여 사용한다.
+import axios from "axios"
 
 export default function MainPage({ navigation, route }) {
   console.disableYellowBox = true;
   
-  const [state, setState] = useState([]); // 기존 꿀팁을 저장하고 있을 상태
-  const [ready, setReady] = useState(true); // 준비 중
-  const [cateState, setCateState] = useState([]); // 카테고리에 따른 각각의 꿀팁을 그때그때 저장관리할 상태
+  const [state, setState] = useState([]); // 기존 꿀팁을 저장하고 있을 상태 생성
+  const [ready, setReady] = useState(true); // 준비 상태를 저장하고 있을 상태 생성
+  const [cateState, setCateState] = useState([]); // 카테고리에 따른 각각의 꿀팁을 그때그때 저장관리할 상태 생성
+  const [weather, setWeather] = useState({ temp : 0, condition : '' }); // 날씨 데이터 상태관리 상태 생성
 
   useEffect(()=>{
 		// 1초 뒤에 실행
@@ -24,10 +26,36 @@ export default function MainPage({ navigation, route }) {
       let tip = data.tip; // 꿀팁 데이터로 모두 초기화 준비
       setState(tip);
       setCateState(tip);
+      getLocation();
       setReady(false);
     }, 1000)
     // 상태 값이 바뀌었지!! 그럼 화면이 다시 로딩된다!
   },[]);
+
+  const getLocation = async () => {
+    try {
+      await Location.requestPermissionsAsync();
+      const locationData= await Location.getCurrentPositionAsync();
+      const latitude = locationData['coords']['latitude']
+      const longitude = locationData['coords']['longitude']
+      const API_KEY = "cfc258c75e1da2149c33daffd07a911d";
+      const result = await axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
+
+      const temp = result.data.main.temp; 
+      const condition = result.data.weather[0].main;
+      
+      console.log(temp);
+      console.log(condition);
+
+      // 응답 받은 데이터를 상태관리
+      setWeather({
+        temp,condition
+      });
+    } catch (error) {
+      // 혹시나 위치를 가져오지 못할 경우를 대비해서, 안내를 준비
+      Alert.alert("위치를 찾을 수 없습니다.", "앱을 재실행 하세요.");
+    }
+  }
 
   const category = (cate) => {
     if (cate == "전체보기"){
@@ -40,16 +68,13 @@ export default function MainPage({ navigation, route }) {
     }
   }
 
-	let todayWeather = 10 + 17;
-  let todayCondition = "흐림"
-
 	// 처음 ready 상태값은 true 이므로 ? 물음표 바로 뒤에 값이 반환된다.
   // useEffect로 인해 데이터가 준비되고, ready 값이 변경되면 : 콜론 뒤의 값이 반환된다.
   return ready ? <Loading/> : (
     <ScrollView style={styles.container}>
       <StatusBar style="dark" />
 
-			<Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition} </Text>
+      <Text style={styles.weather}>오늘의 날씨: {weather.temp + '°C   ' + weather.condition} </Text>
       <TouchableOpacity style={styles.aboutButton} onPress={() => navigation.navigate('AboutPage')}><Text style={styles.aboutButtonText}>소개 페이지</Text></TouchableOpacity>
       <Image style={styles.mainImage} source={main}/>
       <ScrollView style={styles.middleContainer} horizontal indicatorStyle={"white"}>
