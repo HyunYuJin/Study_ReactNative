@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, ScrollView,TouchableOpacity, Alert, Share } from 'react-native';
 import { useState, useEffect } from 'react';
 import * as Linking from 'expo-linking'; // 외부 링크 기능을 위해 불러온다.
+import { firebase_db } from '../firebaseConfig';
 
 export default function DetailPage({ navigation, route }) {
     console.disableYellowBox = true;
@@ -30,10 +31,17 @@ export default function DetailPage({ navigation, route }) {
                 shadowColor: '#000000'
             },
             headerTintColor: '#FFFFFF'
-        })
+        });
 
-        // 다시 상태 재조정!
-        setTip(route.params);
+        // 넘겨받은 데이터는 route.params에 들어있다.
+        const { idx } = route.params;
+        firebase_db.ref('/tip/' + idx).once('value').then((snapshot) => {
+            let tip = snapshot.val();
+            
+            // 다시 상태 재조정!
+            setTip(tip);
+        });
+
     },[]);
 
     const popup = () => {

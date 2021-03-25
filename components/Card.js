@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 //비구조 할당 방식으로 넘긴 속성 데이터를 꺼내 사용함
 export default function Card({ content, navigation }) {
     return (
-        <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DetailPage', content)}}>
+        <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DetailPage', {idx: content.idx})}}>
             <Image style={styles.cardImage} source={{uri:content.image}}/>
             <View style={styles.cardText}>
             <Text style={styles.cardTitle} numberOfLines={1}>{content.title}</Text>
@@ -12,7 +12,7 @@ export default function Card({ content, navigation }) {
             <Text style={styles.cardDate}>{content.date}</Text>
             </View>
         </TouchableOpacity>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
