@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, ScrollView,TouchableOpacity, Alert, Shar
 import { useState, useEffect } from 'react';
 import * as Linking from 'expo-linking'; // 외부 링크 기능을 위해 불러온다.
 import { firebase_db } from '../firebaseConfig';
+import Constants from 'expo-constants';
 
 export default function DetailPage({ navigation, route }) {
     console.disableYellowBox = true;
@@ -44,8 +45,14 @@ export default function DetailPage({ navigation, route }) {
 
     },[]);
 
-    const popup = () => {
-        Alert.alert("팝업!!");
+    // 특정 찜 데이터 몽땅 저장!
+    const like = () => {
+        // 찜 데이터 방 > 사용자 방 > 어떤 찜인지 아이디
+        const user_id = Constants.installationId;
+        firebase_db.ref('/like/' + user_id + '/' + tip.idx).set(tip, function(error) {
+            console.log(error);
+            Alert.alert("찜 완료!");
+        });
     }
 
     const share = () => {
@@ -66,7 +73,7 @@ export default function DetailPage({ navigation, route }) {
                 <Text style={styles.desc}>{tip.desc}</Text>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => popup()}>
+                    <TouchableOpacity style={styles.button} onPress={() => like()}>
                         <Text style={styles.buttonText}>팁 찜하기</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => share()}>
