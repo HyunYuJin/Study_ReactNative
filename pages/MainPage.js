@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import main from '../assets/main.png';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
-import data from '../data.json';
+// import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
 import { StatusBar } from 'expo-status-bar'; // expo에서 제공해주는 상태바 스타일
 import * as Location from "expo-location"; // expo-location 내에 있는 도구를 모두 Location으로 지칭하여 사용한다.
 import axios from "axios"
+import { firebase_db } from '../firebaseConfig';
 
 export default function MainPage({ navigation, route }) {
   console.disableYellowBox = true;
@@ -17,18 +18,34 @@ export default function MainPage({ navigation, route }) {
   const [weather, setWeather] = useState({ temp : 0, condition : '' }); // 날씨 데이터 상태관리 상태 생성
 
   useEffect(()=>{
-		// 1초 뒤에 실행
+    // 1초 뒤에 실행
     setTimeout(()=>{
+      // 헤더의 타이틀 변경
       navigation.setOptions({
-        title: '나만의 꿀팁'
+          title:'나만의 꿀팁'
       });
 
-      let tip = data.tip; // 꿀팁 데이터로 모두 초기화 준비
-      setState(tip);
-      setCateState(tip);
-      getLocation();
-      setReady(false);
-    }, 1000)
+      firebase_db.ref('/tip').once('value').then((snapshot) => {
+        console.log("파이어베이스에서 데이터를 가져왔어!")
+        let tip = snapshot.val();
+        setState(tip);
+        setCateState(tip);
+        getLocation();
+        setReady(false);
+      });
+    },1000);
+
+    // setTimeout(()=>{
+    //   navigation.setOptions({
+    //     title: '나만의 꿀팁'
+    //   });
+
+    //   let tip = data.tip; // 꿀팁 데이터로 모두 초기화 준비
+    //   setState(tip);
+    //   setCateState(tip);
+    //   getLocation();
+    //   setReady(false);
+    // }, 1000)
     // 상태 값이 바뀌었지!! 그럼 화면이 다시 로딩된다!
   },[]);
 
