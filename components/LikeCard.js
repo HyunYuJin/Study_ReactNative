@@ -1,8 +1,26 @@
 import React from "react"
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import Constants from 'expo-constants';
+import { firebase_db } from '../firebaseConfig';
 
 //비구조 할당 방식으로 넘긴 속성 데이터를 꺼내 사용함
 export default function LikeCard({ content, navigation }) {
+    const detail = () => {
+      navigation.navigate('DetailPage', {idx: content.idx})
+    };
+
+    const remove = () => {
+      const user_id = Constants.installationId;
+      firebase_db.ref('/like/'+user_id+'/'+content.idx).remove().then(function(){
+          Alert.alert("삭제 완료");
+          navigation.navigate('LikePage')
+      })
+      .catch(function(error) {
+        Alert.alert("꿀팁이 해제에 실패하였습니다.");
+        console.log("Remove failed: " + error.message);
+      });
+    };
+
     return (
         <View style={styles.card}>
             <Image style={styles.cardImage} source={{uri:content.image}}/>
@@ -10,6 +28,15 @@ export default function LikeCard({ content, navigation }) {
                 <Text style={styles.cardTitle} numberOfLines={1}>{content.title}</Text>
                 <Text style={styles.cardDesc} numberOfLines={3}>{content.desc}</Text>
                 <Text style={styles.cardDate}>{content.date}</Text>
+
+                <View>
+                  <TouchableOpacity style={styles.button} onPress={() => detail()}>
+                    <Text style={styles.buttonText}>자세히보기</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.button} onPress={() => remove()}>
+                    <Text style={styles.buttonText}>찜해제</Text>
+                  </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
