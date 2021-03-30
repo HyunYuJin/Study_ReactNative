@@ -8,6 +8,8 @@ import { StatusBar } from 'expo-status-bar'; // expo에서 제공해주는 상�
 import * as Location from "expo-location"; // expo-location 내에 있는 도구를 모두 Location으로 지칭하여 사용한다.
 import axios from "axios"
 import { firebase_db } from '../firebaseConfig';
+// admob 설정을 위한 expo-ads-admob 라이브라리를 import
+import { setTestDeviceIDAsync, AdMobBanner, AdMobInterstitial, PublisherBanner, AdMobRewarded } from 'expo-ads-admob';
 
 export default function MainPage({ navigation, route }) {
   console.disableYellowBox = true;
@@ -102,10 +104,26 @@ export default function MainPage({ navigation, route }) {
         <TouchableOpacity style={styles.middleButton04} onPress={()=>{category('꿀팁 찜')}} onPress={() => navigation.navigate('LikePage')}><Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
       </ScrollView>
       <View style={styles.cardContainer}>
-         {/* 하나의 카드 영역을 나타내는 View */}
-         {cateState.map((content, i)=>{
+        {/* 하나의 카드 영역을 나타내는 View */}
+        {cateState.map((content, i)=>{
             return (<Card content={content} key={i} navigation={navigation} />)
-          })}
+          })
+        }
+        {Platform.OS === 'ios' ? (
+          <AdMobBanner
+            bannerSize="fullBanner"
+            servePersonalizedAds={true}
+            adUnitID="ca-app-pub-7330086029556335/8791686018"
+            style={styles.banner}
+          />
+        ) : (
+          <AdMobBanner
+            bannerSize="fullBanner"
+            servePersonalizedAds={true}
+            adUnitID="ca-app-pub-7330086029556335/2226277660"
+            style={styles.banner}
+          />
+        )}
       </View>
     </ScrollView>
   );
@@ -208,6 +226,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     marginTop: 10,
     marginLeft: 10
+  },
+  banner: {
+    marginTop: 10
   }
 });
-
