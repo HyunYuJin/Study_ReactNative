@@ -24,7 +24,6 @@ export default function Card({ content, navigation }) {
         AdMobInterstitial.addEventListener("interstitialDidClose", () => {
             // 광고가 끝나면 다음 코드 줄이 실행!
             console.log("interstitialDidClose")
-            navigation.navigate('DetailPage',{idx:content.idx})
         });
     },[]);
 
@@ -32,6 +31,7 @@ export default function Card({ content, navigation }) {
       // 광고 켜기!
       await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
       await AdMobInterstitial.showAdAsync();
+      await navigation.navigate('DetailPage',{idx:content.idx})
     }
 
     return (
