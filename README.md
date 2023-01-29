@@ -1,5 +1,6 @@
 # Study_ReactNative
-## ReactNative를 공부하며 기록해나가는 공간입니다.
+
+## React Native를 공부를 목적으로 만든 꿀팁 앱
 
 ### Expo
 #### 1.Expo 설치
